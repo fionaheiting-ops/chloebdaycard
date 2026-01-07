@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chloe 綠茶小姐</title>
+
+  <style>
+    :root{
+      --bg1:#f3fbff;
+      --bg2:#eaf7ff;
+      --blue1:#d8f0ff;
+      --blue2:#bfe6ff;
+      --blue3:#9fd8ff;
+      --ink:#1b2b3a;
+      --shadow: rgba(9,45,82,.18);
+      --paper:#ffffff;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(1200px 700px at 20% 10%, #fff 0%, var(--bg1) 40%, var(--bg2) 100%);
+      font-family: ui-rounded, system-ui, -apple-system, "PingFang HK", "Noto Sans HK";
+      overflow:hidden;
+    }
+
+    .scene{
+      width:560px;
+      max-width:92vw;
+      height:390px;
+      display:grid;
+      place-items:center;
+      position:relative;
+    }
+
+    .envelope{
+      width:340px;
+      height:220px;
+      position:relative;
+      cursor:pointer;
+      filter: drop-shadow(0 16px 22px var(--shadow));
+    }
+
+    .env-back{
+      position:absolute;
+      inset:0;
+      border-radius:18px;
+      background:linear-gradient(180deg,var(--blue1),var(--blue2));
+    }
+
+    .flap{
+      position:absolute;
+      top:0; left:0; right:0;
+      height:60%;
+      transform-origin:top;
+      transition:.55s;
+      z-index:4;
+    }
+    .flap::before{
+      content:"";
+      margin:auto;
+      display:block;
+      width:0;height:0;
+      border-left:170px solid transparent;
+      border-right:170px solid transparent;
+      border-top:132px solid var(--blue3);
+    }
+
+    .front::before,.front::after{
+      content:"";
+      position:absolute;
+      bottom:0;
+      width:0;height:0;
+      border-top:110px solid transparent;
+      border-bottom:110px solid transparent;
+    }
+    .front::before{ left:0; border-right:175px solid rgba(255,255,255,.35); }
+    .front::after{ right:0; border-left:175px solid rgba(255,255,255,.2); }
+
+    .front-mid{
+      position:absolute;
+      bottom:-2px; left:0; right:0;
+      margin:auto;
+      width:0;height:0;
+      border-left:170px solid transparent;
+      border-right:170px solid transparent;
+      border-bottom:124px solid rgba(255,255,255,.55);
+    }
+
+    .letter{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(92px);
+      width:320px;
+      height:250px;
+      background:#fff;
+      border-radius:14px;
+      border:1px solid rgba(159,216,255,.4);
+      box-shadow:0 14px 20px rgba(9,45,82,.15);
+      opacity:0;
+      transition:.75s;
+      overflow:hidden;
+      z-index:2;
+    }
+
+    .letter-inner{
+      position:absolute;
+      inset:14px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      height:calc(100% - 28px);
+    }
+
+    .closeRow{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .closeBtn{
+      border:none;
+      padding:6px 12px;
+      border-radius:999px;
+      background:rgba(159,216,255,.35);
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .message{
+      flex:1;
+      overflow:auto;
+      white-space:pre-wrap;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .sig{ text-align:right; opacity:.75; }
+
+    .opened .flap{ transform:rotateX(170deg); }
+    .opened .letter{
+      transform:translateX(-50%) translateY(-18px);
+      opacity:1;
+    }
+
+    .expanded .letter{
+      position:fixed;
+      left:50%; top:50%;
+      transform:translate(-50%,-50%);
+      width:min(760px,92vw);
+      height:min(74vh,600px);
+      z-index:9;
+    }
+
+    canvas{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+    }
+  </style>
+</head>
+
+<body>
+<canvas id="confetti"></canvas>
+
+<div class="scene">
+  <div class="envelope" id="envelope">
+    <div class="letter" id="letter">
+      <div class="letter-inner">
+        <div class="closeRow">
+          <strong>Chloe 綠茶小姐 💙</strong>
+          <button class="closeBtn" id="closeBtn">收埋</button>
+        </div>
+        <div class="message" id="msg"></div>
+        <div class="sig">— Fiona</div>
+      </div>
+    </div>
+
+    <div class="env-back"></div>
+    <div class="flap"></div>
+    <div class="front"></div>
+    <div class="front-mid"></div>
+  </div>
+</div>
+
+<script>
+const msg = `祝你17歲12個月零一日生日快樂ah~ 不知不覺就係我哋中學最後一年（跟住我就可以返嚟搵你玩😈) 雖然我成日覺得我冇喺香港同你一齊讀書好遺憾 😭，but even my canada life so trash le每次開手機發現你會搵我都覺得好安心亦都好開心我有一個咁好嘅朋友(yep thats u ms green tea，我呢度啲朋友都知我有bestfrd 叫chloe yu ga😎) btw 好彩當時冇人同我爭 唔係我都識唔到你😏 （生日就係要講肉麻嘢👍this is limited edition 加拿大仲未將我訓練到可以面對面講🙂） 雖然我真係冇辦法叫你唔好緊張dse換着我都做唔到，but我都想同你講當初其實我係見到你咁努力，我先開始有心機讀返書（rlly 真心㗎）我而家好彩拎到offer所以我覺得你一定得hehe ～香港啲大學咁難考你玩game嗰啲運氣借jor d俾個度jeh-你運氣唔差㗎（識到我呢條美麗嘅蘿蔔sry自戀中） 咁最後老土啲 希望你今年越嚟越順利+可以做到啲想做但係唔敢做嘅嘢（本人申請一齊做）and今年未寄到嘢就等我遲啲返嚟一次過俾你🤭Also綠茶小姐老lu~返香港記住湊我呢個加拿大自閉蘿蔔周圍玩✨ （請盡力survive dse）`;
+document.getElementById("msg").textContent = msg;
+
+const envelope = document.getElementById("envelope");
+const closeBtn = document.getElementById("closeBtn");
+let state = 0;
+
+envelope.onclick = () => {
+  if(state===0){ envelope.classList.add("opened"); state=1; }
+  else if(state===1){ document.body.classList.add("expanded"); state=2; rain(); }
+  else rain();
+};
+
+closeBtn.onclick = e => {
+  e.stopPropagation();
+  document.body.classList.remove("expanded");
+  envelope.classList.remove("opened");
+  state = 0;
+};
+
+// leebit rain
+const img = new Image();
+img.src="88db9284018bfc8880b7fea16cbaa537.jpg";
+const c=document.getElementById("confetti"),x=c.getContext("2d");
+function rain(){
+  c.width=innerWidth;c.height=innerHeight;
+  let p=[];
+  for(let i=0;i<120;i++)p.push({x:Math.random()*c.width,y:-20,s:20+Math.random()*25,v:2+Math.random()*3});
+  (function a(){
+    x.clearRect(0,0,c.width,c.height);
+    p.forEach(o=>{o.y+=o.v;x.drawImage(img,o.x,o.y,o.s,o.s);});
+    p=p.filter(o=>o.y<c.height+40);
+    if(p.length)requestAnimationFrame(a);
+  })();
+}
+</script>
+</body>
+</html>
